@@ -78,10 +78,10 @@ function adjLength(servo, delta) {
 }
 
 function clenchFinger(servo, level) {
-	if (servo.backwards) level = 4-level;
-	if (level == 1) {
+	if (servo.backwards) level = 2-level;
+	if (level == 0) {
 		servo.max()
-	} else if (level == 2) {
+	} else if (level == 1) {
 		servo.center()
 	} else {
 		servo.min();
