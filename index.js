@@ -41,12 +41,12 @@ var board = new five.Board();
 		13: Pinky finger
 */
 
-const fullRev = 1000;
+const unitRev = 50;
 const width = 10;
 const height = 2;
-const maxX = 100;
-const maxY = 200;
-const minX = -100;
+const maxX = 1;
+const maxY = 1;
+const minX = -1;
 
 var key = require("keypress");
 
@@ -66,11 +66,24 @@ function getLength2(x, y, isRight) {
 	return Math.sqrt(Math.pow((x - width) - minX, 2) + Math.pow(maxY - (y + height), 2));
 }
 
+function adjLength(servo, delta) {
+	if (delta == 0) return;
+	var time = Math.abs(delta*unitRev);
+	if (delta > 0) servo.cw();
+	else servo.ccw();
+	setTimeout(() => {
+		servo.stop();
+		console.log("we have moved!");
+	}, time);
+}
+
 function moveTo(hand, x, y) {
 	var rightDelta = getLength(hand.RC) - getLength2(x, y, true);
 	var leftDelta = getLength(hand.LC) - getLength2(x, y, false);
+	
 	//Do something with the deltas.
-	console.log(leftDelta, rightDelta)
+	adjLength(hand.RC, rightDelta);
+	adjLength(hand.LC, leftDelta);
 
 	//Update the values
 	hand.RC.posX = x;
@@ -110,6 +123,9 @@ board.on("ready", () => {
 		}
 	})
 
+	//Data will be an array of ternaries, representing the 
+	//position of each finger. LTR: left pinky -> right pinky
+
 	//Set up all the servos
 	leftHand.LC = new five.Servo.Continuous(0);
 	leftHand.RC = new five.Servo.Continuous(1);
@@ -141,7 +157,7 @@ board.on("ready", () => {
 	rightHand.RC.posY = 0;
 	rightHand.RC.isRight = true;	
 
-	moveTo(leftHand, 10, 10);
-	moveTo(leftHand, 10, 10);
+	moveTo(leftHand, 0.1, 0.1);
+	moveTo(leftHand, 0.1, 0.1);
 
 });
