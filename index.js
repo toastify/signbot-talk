@@ -154,11 +154,11 @@ board.on("ready", () => {
 	leftHand.ring = new five.Servo(5);
 	leftHand.pinky = new five.Servo(6);
 
-	leftHand.pinky.backwards = false;
-	leftHand.ring.backwards = false;
-	leftHand.middle.backwards = false;
-	leftHand.index.backwards = true;
-	leftHand.thumb.backwards = true;
+	leftHand.pinky.backwards = true;
+	leftHand.ring.backwards = true;
+	leftHand.middle.backwards = true;
+	leftHand.index.backwards = false;
+	leftHand.thumb.backwards = false;
 
 	rightHand.LC = new five.Servo.Continuous(7);
 	rightHand.RC = new five.Servo.Continuous(8);
@@ -168,11 +168,11 @@ board.on("ready", () => {
 	rightHand.ring = new five.Servo(12);
 	rightHand.pinky = new five.Servo(13);
 
-	leftHand.pinky.backwards = true;
-	leftHand.ring.backwards = true;
-	leftHand.middle.backwards = true;
-	leftHand.index.backwards = false;
-	leftHand.thumb.backwards = false;
+	rightHand.pinky.backwards = false;
+	rightHand.ring.backwards = false;
+	rightHand.middle.backwards = false;
+	rightHand.index.backwards = true;
+	rightHand.thumb.backwards = true;
 
 	leftHand.LC.posX = 0;
 	leftHand.LC.posY = 0;
