@@ -77,6 +77,24 @@ function adjLength(servo, delta) {
 	}, time);
 }
 
+function clenchFinger(servo, level) {
+	if (level == 1) {
+		servo.max()
+	} else if (level == 2) {
+		servo.center()
+	} else {
+		servo.min();
+	}
+}
+
+function clenchFist(hand) {
+	clenchFinger(hand.thumb, 3);
+	clenchFinger(hand.index, 3);
+	clenchFinger(hand.middle, 3);
+	clenchFinger(hand.ring, 3);
+	clenchFinger(hand.pinky, 3);
+}
+
 function moveTo(hand, x, y) {
 	var rightDelta = getLength(hand.RC) - getLength2(x, y, true);
 	var leftDelta = getLength(hand.LC) - getLength2(x, y, false);
