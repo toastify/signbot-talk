@@ -41,10 +41,44 @@ var board = new five.Board();
 		13: Pinky finger
 */
 
+const fullRev = 1000;
+const width = 10;
+const height = 2;
+const maxX = 100;
+const maxY = 200;
+const minX = -100;
+
 var key = require("keypress");
 
 key(process.stdin);
 
+function getLength(servo) {
+	if (servo.isRight) {
+		return Math.sqrt(Math.pow(maxX - (servo.posX + width), 2) + Math.pow(maxY - (servo.posY + height), 2));
+	}
+	return Math.sqrt(Math.pow((servo.posX - width) - minX, 2) + Math.pow(maxY - (servo.posY + height), 2));
+}
+
+function getLength2(x, y, isRight) {
+	if (isRight) {
+		return Math.sqrt(Math.pow(maxX - (x + width), 2) + Math.pow(maxY - (y + height), 2));
+	}
+	return Math.sqrt(Math.pow((x - width) - minX, 2) + Math.pow(maxY - (y + height), 2));
+}
+
+function moveTo(hand, x, y) {
+	var rightDelta = getLength(hand.RC) - getLength2(x, y, true);
+	var leftDelta = getLength(hand.LC) - getLength2(x, y, false);
+	//Do something with the deltas.
+	console.log(leftDelta, rightDelta)
+
+	//Update the values
+	hand.RC.posX = x;
+	hand.RC.posY = y;
+
+	hand.LC.posX = x;
+	hand.LC.posY = y;
+}
 
 var leftHand = new Object();
 var rightHand = new Object();
@@ -64,7 +98,7 @@ board.on("ready", () => {
 			process.exit();
 		} else if (k.name === 'up') {
 			rightHand.pinky.center();
-			console.log("upright");
+			console.log("up");
 		} else if (k.name === 'left') {
 			rightHand.pinky.min();
 			console.log("left");
@@ -93,6 +127,21 @@ board.on("ready", () => {
 	rightHand.ring = new five.Servo(12);
 	rightHand.pinky = new five.Servo(13);
 
-	//Attempt to rotate the pinky servo
-	//rightHand.pinky.sweep();
+	leftHand.LC.posX = 0;
+	leftHand.LC.posY = 0;
+	leftHand.LC.isRight = false;
+	leftHand.RC.posX = 0;
+	leftHand.RC.posY = 0;
+	leftHand.RC.isRight = true;
+
+	rightHand.LC.posX = 0;
+	rightHand.LC.posY = 0;
+	rightHand.LC.isRight = false;
+	rightHand.RC.posX = 0;
+	rightHand.RC.posY = 0;
+	rightHand.RC.isRight = true;	
+
+	moveTo(leftHand, 10, 10);
+	moveTo(leftHand, 10, 10);
+
 });
