@@ -78,6 +78,7 @@ function adjLength(servo, delta) {
 }
 
 function clenchFinger(servo, level) {
+	if (servo.backwards) level = 4-level;
 	if (level == 1) {
 		servo.max()
 	} else if (level == 2) {
@@ -153,6 +154,12 @@ board.on("ready", () => {
 	leftHand.ring = new five.Servo(5);
 	leftHand.pinky = new five.Servo(6);
 
+	leftHand.pinky.backwards = false;
+	leftHand.ring.backwards = false;
+	leftHand.middle.backwards = false;
+	leftHand.index.backwards = true;
+	leftHand.thumb.backwards = true;
+
 	rightHand.LC = new five.Servo.Continuous(7);
 	rightHand.RC = new five.Servo.Continuous(8);
 	rightHand.thumb = new five.Servo(9);
@@ -160,6 +167,12 @@ board.on("ready", () => {
 	rightHand.middle = new five.Servo(11);
 	rightHand.ring = new five.Servo(12);
 	rightHand.pinky = new five.Servo(13);
+
+	leftHand.pinky.backwards = true;
+	leftHand.ring.backwards = true;
+	leftHand.middle.backwards = true;
+	leftHand.index.backwards = false;
+	leftHand.thumb.backwards = false;
 
 	leftHand.LC.posX = 0;
 	leftHand.LC.posY = 0;
@@ -173,9 +186,5 @@ board.on("ready", () => {
 	rightHand.LC.isRight = false;
 	rightHand.RC.posX = 0;
 	rightHand.RC.posY = 0;
-	rightHand.RC.isRight = true;	
-
-	moveTo(leftHand, 0.1, 0.1);
-	moveTo(leftHand, 0.1, 0.1);
-
+	rightHand.RC.isRight = true;
 });
