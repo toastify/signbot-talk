@@ -36,11 +36,11 @@ console.log('starting signbot-talk');
 */
 
 const fullRotate = 120;
-const unitRev = 4000;
+const unitRev = 6000;
 const width = 0;
 const height = 0;
 const maxX = 1;
-const maxY = 1;
+const maxY = 1.5;
 const minX = -1;
 
 var key = require("keypress");
