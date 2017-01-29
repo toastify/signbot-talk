@@ -153,46 +153,46 @@ boards.on("ready", () => {
 			process.exit();
 		} else if (k.name === 'up') {
 			moveTo(rightHand, rightHand.RC.posX, rightHand.RC.posY +0.01);
-			//moveTo(leftHand, leftHand.RC.posX, leftHand.RC.posY + 0.01);
+			moveTo(leftHand, leftHand.RC.posX, leftHand.RC.posY + 0.01);
 			console.log("up");
 		} else if (k.name === 'left') {		
 			moveTo(rightHand, rightHand.RC.posX-0.01, rightHand.RC.posY);
-			//moveTo(leftHand, leftHand.RC.posX-0.01, leftHand.RC.posY);	
+			moveTo(leftHand, leftHand.RC.posX-0.01, leftHand.RC.posY);	
 			console.log("left");
 		} else if (k.name === 'right') {
 			moveTo(rightHand, rightHand.RC.posX+0.01, rightHand.RC.posY);
-			//moveTo(leftHand, leftHand.RC.posX+	0.01, leftHand.RC.posY);	
+			moveTo(leftHand, leftHand.RC.posX+	0.01, leftHand.RC.posY);	
 			console.log("right");
 		} else if (k.name === 'down'){
 			moveTo(rightHand, rightHand.RC.posX, rightHand.RC.posY - 0.01);
-			//moveTo(leftHand, leftHand.RC.posX, leftHand.RC.posY - 0.01);
+			moveTo(leftHand, leftHand.RC.posX, leftHand.RC.posY - 0.01);
 			console.log("down");
 		} else if (k.name === "space") {
 			clenchFist(leftHand, 2);
-			//clenchFist(rightHand, 2);
+			clenchFist(rightHand, 2);
 			console.log("space");
 		} else if (k.name === "j") {
 			clenchFist(leftHand, 0);
-			//clenchFist(rightHand, 0);
+			clenchFist(rightHand, 0);
 			console.log("j");
 		}
 	});
   }
 	//Data will be an array of ternaries, representing the 
 	//position of each finger. LTR: left pinky -> right pinky
-
+	console.log(Object.keys(boards[0].pins));
 	//Set up all the servos
-	leftHand.LC = new five.Servo.Continuous({pin: 8, board: boards.left});
-	leftHand.RC = new five.Servo.Continuous({pin: 9, board: boards.left});
+	leftHand.LC = new five.Servo.Continuous({pin: 8, board: boards[0]});
+	leftHand.RC = new five.Servo.Continuous({pin: 9, board: boards[0]});
 	//leftHand.thumb = new five.Servo({pin: 5, board: boards.left});
-	leftHand.thumb = new five.Servo({pin: 6, board: boards.left});
-	leftHand.index = new five.Servo({pin: 7, board: boards.left});
-	leftHand.pinky = new five.Servo({pin: 3, board: boards.left});
-	leftHand.ring = new five.Servo({pin: 4, board: boards.left});
+	leftHand.thumb = new five.Servo({pin: 6, board: boards[0]});
+	leftHand.index = new five.Servo({pin: 7, board: boards[0]});
+	leftHand.pinky = new five.Servo({pin: 3, board: boards[0]});
+	leftHand.ring = new five.Servo({pin: 4, board: boards[0]});
 
 
 	leftHand.pinky.backwards = true;
-	leftHand.ring.backwards = true;
+	leftHand.ring.backwards = true;	
 	//leftHand.middle.backwards = true;
 	leftHand.index.backwards = false;
 	leftHand.thumb.backwards = false;
@@ -208,14 +208,13 @@ boards.on("ready", () => {
 	//position of each finger. LTR: left pinky -> right pinky
 
 	//Set up all the servos
-
-	rightHand.LC = new five.Servo.Continuous({pin: 8, board: boards.right});
-	rightHand.RC = new five.Servo.Continuous({pin: 9, board: boards.right});
-	rightHand.thumb = new five.Servo({pin: 6, board: boards.right});
-	rightHand.index = new five.Servo({pin: 3, board: boards.right});
+	rightHand.LC = new five.Servo.Continuous({pin: 8, board: boards[1]});
+	rightHand.RC = new five.Servo.Continuous({pin: 9, board: boards[1]});
+	rightHand.thumb = new five.Servo({pin: 6, board: boards[1]});
+	rightHand.index = new five.Servo({pin: 3, board: boards[1]});
 	//rightHand.middle = new five.Servo({pin: 7, board: boards.right});
-	rightHand.ring = new five.Servo({pin: 4, board: boards.right});
-	rightHand.pinky = new five.Servo({pin: 7, board: boards.right});
+	rightHand.ring = new five.Servo({pin: 4, board: boards[1]});
+	rightHand.pinky = new five.Servo({pin: 7, board: boards[1]});
 
 	rightHand.ring.backwards = false;
 	rightHand.thumb.backwards = true;
@@ -227,6 +226,7 @@ boards.on("ready", () => {
 	rightHand.LC.isRight = false;
 	rightHand.RC.posX = 0;
 	rightHand.RC.posY = 0;
+	rightHand.RC.isRight = true;
 
-	console.log(rightHand);
+	
 });
