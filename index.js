@@ -157,7 +157,7 @@ board.on("ready", () => {
 	leftHand.ring.backwards = true;
 	leftHand.middle.backwards = true;
 	leftHand.index.backwards = false;
-	leftHand.thumb.backwards = false;
+	leftHand.thumb.backwards = true;
 
 	rightHand.LC = new five.Servo.Continuous(7);
 	rightHand.RC = new five.Servo.Continuous(8);
