@@ -110,6 +110,15 @@ board.on("ready", () => {
   //Receiving commands from parent process (signbot-hear)
   if(process.send){
     process.on('message', function(msg){
+      if(msg.left && msg.left.xy)
+        moveTo(leftHand, msg.left.xy[0], msg.left.xy[1]);
+      else
+        moveTo(leftHand, -0.5, 0);
+      if(msg.right && msg.right.xy)
+        moveTo(rightHand, msg.right.xy[0], msg.right.xy[1]);
+      else
+        moveTo(rightHand, 0.5, 0);
+      
       let values = Data.getAllFingers(msg);
       let servos = [leftHand.thumb, leftHand.index, leftHand.middle, leftHand.ring, leftHand.pinky,
       rightHand.thumb, rightHand.index, rightHand.middle, rightHand.ring, rightHand.pinky];
