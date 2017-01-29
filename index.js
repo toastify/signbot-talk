@@ -1,19 +1,3 @@
-//Server stuff
-const http = require("http");
-const port = 3000;
-
-const handler = (req, resp) => {
-	console.log(req.url);
-	resp.end("This is the webpage");
-}
-
-const server = http.createServer(handler);
-
-server.listen(port, (err) => {
-	if (err) console.log("something's not right...");
-	console.log("server listening on port " + port);
-});
-
 //Begin servo/hand stuff
 const five = require("johnny-five");
 
@@ -117,31 +101,46 @@ var rightHand = new Object();
 
 board.on("ready", () => {
 	console.log("board is ready!");
+  
+  //Receiving commands from parent process (signbot-hear)
+  if(process.send)
+    process.on('message', function(msg){
+      let servos = [leftHand.thumb, leftHand.indexFinger, leftHand.middleFinger, leftHand.ringFinger, leftHand.pinky,
+      rightHand.thumb, rightHand.indexFinger, rightHand.middleFinger, rightHand.ringFinger, rightHand.pinky];
+      for(let i = 0; i < 10; i++)
+        if(msg[i] > 1.5)
+          servos[i].max();
+        else if(msg[i] < 0.5)
+          servos[i].min();
+        else
+          servos[i].center();
+    });
+  //Otherwise receive commands from keypresses.
+  else {
+    process.stdin.resume();
+    process.stdin.setEncoding("utf-8");
+    process.stdin.setRawMode(true);
 
-	process.stdin.resume();
-	process.stdin.setEncoding("utf-8");
-	process.stdin.setRawMode(true);
+    process.stdin.on("keypress", (ch, k) => {
+      if (!k) return;
 
-	process.stdin.on("keypress", (ch, k) => {
-		if (!k) return;
-
-		if (k.name === 'q') {
-			console.log("quitting");
-			process.exit();
-		} else if (k.name === 'up') {
-			rightHand.pinky.center();
-			console.log("up");
-		} else if (k.name === 'left') {
-			rightHand.pinky.min();
-			console.log("left");
-		} else if (k.name === 'right') {
-			rightHand.pinky.max();
-			console.log("right");
-		} else {
-			console.log(k.name);
-		}
-	})
-
+      if (k.name === 'q') {
+        console.log("quitting");
+        process.exit();
+      } else if (k.name === 'up') {
+        rightHand.pinky.center();
+        console.log("up");
+      } else if (k.name === 'left') {
+        rightHand.pinky.min();
+        console.log("left");
+      } else if (k.name === 'right') {
+        rightHand.pinky.max();
+        console.log("right");
+      } else {
+        console.log(k.name);
+      }
+    });
+  }
 	//Data will be an array of ternaries, representing the 
 	//position of each finger. LTR: left pinky -> right pinky
 
