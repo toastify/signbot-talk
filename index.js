@@ -96,8 +96,9 @@ function moveTo(hand, x, y) {
 	hand.LC.posY = y;
 }
 
-var leftHand = new Object();
-var rightHand = new Object();
+let leftHand, rightHand;
+
+let Data = require("../signbot-data/data");
 
 board.on("ready", () => {
 	console.log("board is ready!");
@@ -105,12 +106,13 @@ board.on("ready", () => {
   //Receiving commands from parent process (signbot-hear)
   if(process.send)
     process.on('message', function(msg){
+      let values = Data.getAllFingers(msg);
       let servos = [leftHand.thumb, leftHand.index, leftHand.middle, leftHand.ring, leftHand.pinky,
       rightHand.thumb, rightHand.index, rightHand.middle, rightHand.ring, rightHand.pinky];
       for(let i = 0; i < 10; i++)
-        if(msg[i] > 1.5)
+        if(values[i] > 1.5)
           clenchFinger(servos[i], 2);
-        else if(msg[i] < 0.5)
+        else if(values[i] < 0.5)
           clenchFinger(servos[i], 0);
         else
           clenchFinger(servos[i], 1);
