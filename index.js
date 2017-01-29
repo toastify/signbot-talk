@@ -25,9 +25,9 @@ var board = new five.Board();
 		13: Pinky finger
 */
 
-const unitRev = 50;
-const width = 10;
-const height = 2;
+const unitRev = 50000;
+const width = 0;
+const height = 0;
 const maxX = 1;
 const maxY = 1;
 const minX = -1;
@@ -53,8 +53,10 @@ function getLength2(x, y, isRight) {
 function adjLength(servo, delta) {
 	if (delta == 0) return;
 	var time = Math.abs(delta*unitRev);
-	if (delta > 0) servo.cw();
-	else servo.ccw();
+	if (delta < 0 && servo.isRight) servo.cw();
+	else if (delta < 0) servo.ccw();
+	else if (servo.isRight) servo.ccw();
+	else servo.cw();
 	setTimeout(() => {
 		servo.stop();
 		console.log("we have moved!");
@@ -81,8 +83,8 @@ function clenchFist(hand) {
 }
 
 function moveTo(hand, x, y) {
-	var rightDelta = getLength(hand.RC) - getLength2(x, y, true);
-	var leftDelta = getLength(hand.LC) - getLength2(x, y, false);
+	var rightDelta = -1*getLength(hand.RC) + getLength2(x, y, true);
+	var leftDelta = -1*getLength(hand.LC) + getLength2(x, y, false);
 	
 	//Do something with the deltas.
 	adjLength(hand.RC, rightDelta);
@@ -124,24 +126,31 @@ board.on("ready", () => {
     process.stdin.setRawMode(true);
 
     process.stdin.on("keypress", (ch, k) => {
-      if (!k) return;
+		if (!k) return;
 
-      if (k.name === 'q') {
-        console.log("quitting");
-        process.exit();
-      } else if (k.name === 'up') {
-        rightHand.pinky.center();
-        console.log("up");
-      } else if (k.name === 'left') {
-        rightHand.pinky.min();
-        console.log("left");
-      } else if (k.name === 'right') {
-        rightHand.pinky.max();
-        console.log("right");
-      } else {
-        console.log(k.name);
-      }
-    });
+		if (k.name === 'q') {
+			console.log("quitting");
+			process.exit();
+		} else if (k.name === 'up') {
+			moveTo(rightHand, rightHand.RC.posX, rightHand.RC.posY +0.01);
+			moveTo(leftHand, leftHand.RC.posX, leftHand.RC.posY + 0.01);
+			console.log("up");
+		} else if (k.name === 'left') {		
+			moveTo(rightHand, rightHand.RC.posX-0.01, rightHand.RC.posY);
+			moveTo(leftHand, leftHand.RC.posX-0.01, leftHand.RC.posY);	
+			console.log("left");
+		} else if (k.name === 'right') {
+			moveTo(rightHand, rightHand.RC.posX+0.01, rightHand.RC.posY);
+			moveTo(leftHand, leftHand.RC.posX+	0.01, leftHand.RC.posY);	
+			console.log("right");
+		} else if (k.name === 'down'){
+			moveTo(rightHand, rightHand.RC.posX, rightHand.RC.posY - 0.01);
+			moveTo(leftHand, leftHand.RC.posX, leftHand.RC.posY - 0.01);
+			console.log("down");
+		} else {
+			console.log(k.name);
+		}
+	});
   }
 	//Data will be an array of ternaries, representing the 
 	//position of each finger. LTR: left pinky -> right pinky
