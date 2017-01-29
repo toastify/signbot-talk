@@ -105,8 +105,8 @@ board.on("ready", () => {
   //Receiving commands from parent process (signbot-hear)
   if(process.send)
     process.on('message', function(msg){
-      let servos = [leftHand.thumb, leftHand.indexFinger, leftHand.middleFinger, leftHand.ringFinger, leftHand.pinky,
-      rightHand.thumb, rightHand.indexFinger, rightHand.middleFinger, rightHand.ringFinger, rightHand.pinky];
+      let servos = [leftHand.thumb, leftHand.index, leftHand.middle, leftHand.ring, leftHand.pinky,
+      rightHand.thumb, rightHand.index, rightHand.middle, rightHand.ring, rightHand.pinky];
       for(let i = 0; i < 10; i++)
         if(msg[i] > 1.5)
           servos[i].max();
