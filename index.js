@@ -1,5 +1,6 @@
 //Begin servo/hand stuff
 const five = require("johnny-five");
+const Data = require("../signbot-data/data");
 // var board1 = new five.Board({ port: "COM4" });
 // var board2 = new five.Board({ port: "COM5" });
 
@@ -35,7 +36,7 @@ console.log('starting signbot-talk');
 */
 
 const fullRotate = 120;
-const unitRev = 1000;
+const unitRev = 4000;
 const width = 0;
 const height = 0;
 const maxX = 1;
@@ -69,12 +70,11 @@ function adjLength(servo, delta) {
 	else servo.cw();
 	setTimeout(() => {
 		servo.stop();
-		console.log("we have moved!");
+		console.log("finished adjLength movement");
 	}, time);
 }
 
 function clenchFinger(servo, level) {
-	console.log(servo);
 	if (servo.backwards) level = 2-level;
 	if (level === 0){
 		servo.max();
@@ -119,26 +119,40 @@ boards.on("ready", () => {
   //Receiving commands from parent process (signbot-hear)
   if(process.send){
     process.on('message', function(msg){
-      if(msg.left && msg.left.xy)
+      console.log(msg);
+      if(msg.left && msg.left.xy){
         moveTo(leftHand, msg.left.xy[0], msg.left.xy[1]);
-      else
+        console.log(msg.left.xy)
+    	}
+      else{
+      	console.log("Moving left to default -0.5, 0");
         moveTo(leftHand, -0.5, 0);
-      if(msg.right && msg.right.xy)
+    	}
+
+      if(msg.right && msg.right.xy){
         moveTo(rightHand, msg.right.xy[0], msg.right.xy[1]);
-      else
+        console.log(msg.right.xy)
+    	}
+      else{
+      	console.log("Moving right to default 0.5, 0");
         moveTo(rightHand, 0.5, 0);
+    	}
       
       let values = Data.getAllFingers(msg);
       let servos = [leftHand.thumb, leftHand.index, leftHand.middle, leftHand.ring, leftHand.pinky,
       rightHand.thumb, rightHand.index, rightHand.middle, rightHand.ring, rightHand.pinky];
       for(let i = 0; i < 10; i++)
-        if(values[i] > 1.5)
+      	if(i == 2 || i == 7)
+      		continue;
+        else if(values[i] > 1.5)
           clenchFinger(servos[i], 2);
         else if(values[i] < 0.5)
           clenchFinger(servos[i], 0);
         else
           clenchFinger(servos[i], 1);
       console.log(values);
+      console.log("done");
+      console.log();
     });
   //Otherwise receive commands from keypresses.
   }else {
@@ -166,6 +180,7 @@ boards.on("ready", () => {
 			console.log("right");
 		} else if (k.name === 'down'){
 			moveTo(rightHand, 0.5, 0.5);
+			moveTo(leftHand, 0.5, 0.5);
 			console.log("down");
 		} else if (k.name === "space") {
 			clenchFist(leftHand, 2);
@@ -197,10 +212,10 @@ boards.on("ready", () => {
 	leftHand.index.backwards = false;
 	leftHand.thumb.backwards = false;
 
-	leftHand.LC.posX = 0;
+	leftHand.LC.posX = -0.5;
 	leftHand.LC.posY = 0;
 	leftHand.LC.isRight = false;
-	leftHand.RC.posX = 0;
+	leftHand.RC.posX = -0.5;
 	leftHand.RC.posY = 0;
 	leftHand.RC.isRight = true;
 
@@ -221,10 +236,10 @@ boards.on("ready", () => {
 	rightHand.pinky.backwards = false;
 	rightHand.index.backwards = true;
 
-	rightHand.LC.posX = 0;
+	rightHand.LC.posX = 0.5;
 	rightHand.LC.posY = 0;
 	rightHand.LC.isRight = false;
-	rightHand.RC.posX = 0;
+	rightHand.RC.posX = 0.5;
 	rightHand.RC.posY = 0;
 	rightHand.RC.isRight = true;
 
