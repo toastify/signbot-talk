@@ -1,6 +1,5 @@
 //Begin servo/hand stuff
 const five = require("johnny-five");
-
 // var board1 = new five.Board({ port: "COM4" });
 // var board2 = new five.Board({ port: "COM5" });
 
@@ -10,6 +9,7 @@ var ports = [
 ]
 
 var boards = new five.Boards(ports);
+console.log('starting signbot-talk');
 
 
 //A hand is comprised of 2 NC and 5 C.
@@ -116,21 +116,31 @@ boards.on("ready", () => {
 	console.log("UNO is ready!");
   
   //Receiving commands from parent process (signbot-hear)
-  // if(process.send)
-  //   process.on('message', function(msg){
-  //     let values = Data.getAllFingers(msg);
-  //     let servos = [leftHand.thumb, leftHand.index, leftHand.middle, leftHand.ring, leftHand.pinky,
-  //     rightHand.thumb, rightHand.index, rightHand.middle, rightHand.ring, rightHand.pinky];
-  //     for(let i = 0; i < 10; i++)
-  //       if(values[i] > 1.5)
-  //         clenchFinger(servos[i], 2);
-  //       else if(values[i] < 0.5)
-  //         clenchFinger(servos[i], 0);
-  //       else
-  //         clenchFinger(servos[i], 1);
-  //   });
-  // //Otherwise receive commands from keypresses.
-  // else {
+  if(process.send){
+    process.on('message', function(msg){
+      if(msg.left && msg.left.xy)
+        moveTo(leftHand, msg.left.xy[0], msg.left.xy[1]);
+      else
+        moveTo(leftHand, -0.5, 0);
+      if(msg.right && msg.right.xy)
+        moveTo(rightHand, msg.right.xy[0], msg.right.xy[1]);
+      else
+        moveTo(rightHand, 0.5, 0);
+      
+      let values = Data.getAllFingers(msg);
+      let servos = [leftHand.thumb, leftHand.index, leftHand.middle, leftHand.ring, leftHand.pinky,
+      rightHand.thumb, rightHand.index, rightHand.middle, rightHand.ring, rightHand.pinky];
+      for(let i = 0; i < 10; i++)
+        if(values[i] > 1.5)
+          clenchFinger(servos[i], 2);
+        else if(values[i] < 0.5)
+          clenchFinger(servos[i], 0);
+        else
+          clenchFinger(servos[i], 1);
+      console.log(values);
+    });
+  //Otherwise receive commands from keypresses.
+  }else {
     process.stdin.resume();
     process.stdin.setEncoding("utf-8");
     process.stdin.setRawMode(true);
@@ -167,7 +177,7 @@ boards.on("ready", () => {
 			console.log("j");
 		}
 	});
-  //}
+  }
 	//Data will be an array of ternaries, representing the 
 	//position of each finger. LTR: left pinky -> right pinky
 
