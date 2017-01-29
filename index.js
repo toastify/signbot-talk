@@ -34,7 +34,8 @@ console.log('starting signbot-talk');
 		13: Pinky finger
 */
 
-const unitRev = 50000;
+const fullRotate = 120;
+const unitRev = 1000;
 const width = 0;
 const height = 0;
 const maxX = 1;
@@ -78,9 +79,9 @@ function clenchFinger(servo, level) {
 	if (level === 0){
 		servo.max();
 	} else if (level == 1) {
-		servo.center();
+		servo.to((180-fullRotate)/2);
 	} else {
-		servo.min();
+		servo.to(180-fullRotate);
 	}
 }
 
@@ -164,8 +165,7 @@ boards.on("ready", () => {
 			moveTo(leftHand, leftHand.RC.posX+	0.01, leftHand.RC.posY);	
 			console.log("right");
 		} else if (k.name === 'down'){
-			moveTo(rightHand, rightHand.RC.posX, rightHand.RC.posY - 0.01);
-			moveTo(leftHand, leftHand.RC.posX, leftHand.RC.posY - 0.01);
+			moveTo(rightHand, 0.5, 0.5);
 			console.log("down");
 		} else if (k.name === "space") {
 			clenchFist(leftHand, 2);
@@ -180,7 +180,7 @@ boards.on("ready", () => {
   }
 	//Data will be an array of ternaries, representing the 
 	//position of each finger. LTR: left pinky -> right pinky
-	console.log(Object.keys(boards[0].pins));
+	//console.log(Object.keys(boards[0].pins));
 	//Set up all the servos
 	leftHand.LC = new five.Servo.Continuous({pin: 8, board: boards[0]});
 	leftHand.RC = new five.Servo.Continuous({pin: 9, board: boards[0]});
@@ -218,8 +218,8 @@ boards.on("ready", () => {
 
 	rightHand.ring.backwards = false;
 	rightHand.thumb.backwards = true;
-	rightHand.pinky.backwards = true;
-	rightHand.index.backwards = false;
+	rightHand.pinky.backwards = false;
+	rightHand.index.backwards = true;
 
 	rightHand.LC.posX = 0;
 	rightHand.LC.posY = 0;
@@ -228,5 +228,6 @@ boards.on("ready", () => {
 	rightHand.RC.posY = 0;
 	rightHand.RC.isRight = true;
 
-	
+	clenchFist(rightHand, 0);
+	clenchFist(leftHand, 0);
 });
