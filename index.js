@@ -1,6 +1,8 @@
 //Begin servo/hand stuff
 const five = require("johnny-five");
 
+console.log('starting signbot-talk');
+
 var board = new five.Board();
 
 //A hand is comprised of 2 NC and 5 C.
@@ -104,7 +106,7 @@ board.on("ready", () => {
 	console.log("board is ready!");
   
   //Receiving commands from parent process (signbot-hear)
-  if(process.send)
+  if(process.send){
     process.on('message', function(msg){
       let values = Data.getAllFingers(msg);
       let servos = [leftHand.thumb, leftHand.index, leftHand.middle, leftHand.ring, leftHand.pinky,
@@ -116,9 +118,10 @@ board.on("ready", () => {
           clenchFinger(servos[i], 0);
         else
           clenchFinger(servos[i], 1);
+      console.log(values);
     });
   //Otherwise receive commands from keypresses.
-  else {
+  }else {
     process.stdin.resume();
     process.stdin.setEncoding("utf-8");
     process.stdin.setRawMode(true);
