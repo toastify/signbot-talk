@@ -109,11 +109,11 @@ board.on("ready", () => {
       rightHand.thumb, rightHand.index, rightHand.middle, rightHand.ring, rightHand.pinky];
       for(let i = 0; i < 10; i++)
         if(msg[i] > 1.5)
-          servos[i].max();
+          clenchFinger(servos[i], 2);
         else if(msg[i] < 0.5)
-          servos[i].min();
+          clenchFinger(servos[i], 0);
         else
-          servos[i].center();
+          clenchFinger(servos[i], 1);
     });
   //Otherwise receive commands from keypresses.
   else {
